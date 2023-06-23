@@ -7,6 +7,12 @@ const dbconection=require("./config/database");
 const path = require('path')
 dbconection();
 const app = express()
+
+
+
+
+
+
 const server = require("http").Server(app);
 app.set("view engine", "ejs");
 const io = require("socket.io")(server, {
@@ -29,6 +35,7 @@ app.get("/", (req, res) => {
 app.get("/:room", (req, res) => {
   res.render("room", { roomId: req.params.room });
 });
+
 io.on("connection", (socket) => {
   socket.on("join-room", (roomId, userId, userName) => {
     socket.join(roomId);
