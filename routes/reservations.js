@@ -4,7 +4,7 @@ const usersController = require('../controllers/reservations')
 const router = express.Router()
 const {createReservation } = require('../middleware/validator')
 
-router.post('/createReservation',createReservation(), usersController.create) 
+router.post('/createReservation',gaurd, usersController.create) 
 
 router.get('/checkout-session/:id',gaurd,usersController.cheeckOutSession)
 

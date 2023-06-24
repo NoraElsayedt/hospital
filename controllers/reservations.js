@@ -13,15 +13,6 @@ exports.create = async(req,res,next)=>
     const start = moment(req.body.start,'h:mm a').format('h:mm a') 
    const meetingStart = moment.utc(Math.floor(new Date(time+'T'+convert).getTime() / 1000))
     try{
-         //Get the validation Error
-    // const errors = validationResult(req)
-    // if(!errors.isEmpty())
-    //     {
-    //         return res.status(422).json({
-    //             errors:errors.array()
-    //         });
-    //     }
-
         const patient = await User.findById(req.body.patient)
         const doctor = await Doctor.findById(req.body.doctor)
     
