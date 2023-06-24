@@ -3,7 +3,7 @@ var moment = require('moment');
 const User = require('../model/users')
 const Doctor = require('../model/doctor')
 const stripe = require("stripe")(process.env.STRIPE_SECERT);
-
+const {validationResult} = require('express-validator') 
 
 exports.create = async(req,res,next)=>
 {
@@ -13,10 +13,18 @@ exports.create = async(req,res,next)=>
     const start = moment(req.body.start,'h:mm a').format('h:mm a') 
    const meetingStart = moment.utc(Math.floor(new Date(time+'T'+convert).getTime() / 1000))
     try{
+         //Get the validation Error
+    // const errors = validationResult(req)
+    // if(!errors.isEmpty())
+    //     {
+    //         return res.status(422).json({
+    //             errors:errors.array()
+    //         });
+    //     }
+
         const patient = await User.findById(req.body.patient)
         const doctor = await Doctor.findById(req.body.doctor)
-        if(req.body.type === 'online')
-        {
+    
         if(!(req.body.start && req.body.time))
         {
             return res.status(401).json({message:'enter time and date'})
@@ -25,7 +33,7 @@ exports.create = async(req,res,next)=>
             "doctor":req.body.doctor
             ,"start":start,"time":moment(time).format("YYYY-MM-DD"),"isPaid":true})
         .where('reservationPlace').equals('video call')
-        if(foundApppoitment)
+        if(!foundApppoitment)
             {
                 return res.status(400).json({message:'this Apppoitment not found'})
             } 
@@ -35,9 +43,10 @@ exports.create = async(req,res,next)=>
                 patient:patient,
                 reservationPlace:'video call',
           meetingStart:meetingStart,
+          totalPaid:doctor.price,
                 time:moment(time).format("YYYY-MM-DD")
             })
-        }
+        
 
     if(patient.roles != 'user')
         {

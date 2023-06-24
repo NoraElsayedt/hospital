@@ -103,3 +103,15 @@ exports.updateProfileUser =()=>
         .optional({nullable:true})
    ]
 }
+
+//validate the createReservation
+
+exports.createReservation =()=>
+{
+ return [
+    body('cardnumber','please enter a valid card number') // validate the phone
+       .isNumeric().trim().isLength({'max':14}),
+    body('securitycode','please enter a valid securitycode') // validate the phone
+       .isNumeric().trim().isLength({'max':3}),
+]
+}

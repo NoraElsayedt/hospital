@@ -55,8 +55,22 @@ const appointmentSchema = new schema({
       },
       isPaid: {
         type: Boolean,
-        default: false,
+        default:true,
       },
+      cardnumber: {type:String,
+        minlength:[14,'please enter a valid card number '],
+        maxlength:[14,'please enter a valid card number '],
+     },
+     securitycode:{
+      type:String,
+        minlength:[3,'please enter a valid security code'],
+        maxlength:[3,'please enter a valid security code'],
+     },
+     expiration:{
+      type: String, 
+      required:true
+     }
+     ,
       totalPaid:
       {
         type:Number
