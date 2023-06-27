@@ -115,7 +115,7 @@ exports.deleteProfile = async(req,res,next)=>
 exports.getAllReservation = async(req,res,next)=>
 {
     const appointments = await appointment
-    .find({ patient:req.userId})
+    .find({ "patient":req.body.userId})
     .populate('doctor','userName photo location')
     .select('-reservationPlace -reservationStatus -phone -name')
     try
