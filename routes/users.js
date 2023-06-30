@@ -13,6 +13,6 @@ router.put('/account/changePassword/:id',gaurd,usersControllers.updatedPassword)
 
 router.delete('/account/profile/:id',gaurd,usersControllers.deleteProfile)
 
-router.get('/reservation',gaurd,usersControllers.getAllReservation)
+router.get('/reservation/:id',gaurd,usersControllers.getAllReservation)
 
 module.exports = router
