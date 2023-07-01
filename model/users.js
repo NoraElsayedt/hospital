@@ -33,6 +33,11 @@ const patientSchema = new schema(
         photo:{type:String},
         photoId:{type:String},
 
+        notes:
+        {
+            type:[schema.Types.ObjectId],
+            ref:'Notes'
+        },
         birthDate:{type:String},
         roles:{
             type: [String],
