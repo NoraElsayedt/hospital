@@ -30,6 +30,7 @@ router.get('/complaints/:doctorId',gaurd,adminController.getComplaintsDoctor)
 
 router.delete('/deleteDoctor/:doctorId',gaurd,adminController.deleteProfile)
 
+router.get('/accounts/:doctorId',adminController.getAccounts)
 
 
 module.exports = router

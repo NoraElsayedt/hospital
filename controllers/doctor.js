@@ -163,8 +163,8 @@ exports.updateProfile =async(req,res,next)=>
 
 exports.getReservationDay = async(req,res,next)=>
 {
-    const time = req.body.time
-    const doctor = req.body.doctorId
+    const time = req.params.time
+    const doctor =req.params.id 
     const reservation = await appointments
     .find({
         "doctor":doctor,
@@ -190,8 +190,9 @@ exports.getReservationDay = async(req,res,next)=>
 
 exports.getAllReservation = async(req,res,next)=>
 {
+    appid =req.params.id 
     const getAllReservation =  await appointments
-    .find({"doctor":req.body.doctorId})
+    .find({"doctor":appid})
     .populate('patient','userName gender birthDate')
     try
     {

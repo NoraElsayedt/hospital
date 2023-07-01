@@ -230,3 +230,59 @@ exports.deleteProfile = async(req,res,next)=>
 }
 
 
+exports.getAccounts = async(req,res,next)=>
+{
+    try
+    {
+        let doctorId = req.params.doctorId
+        const doctorData = await Doctor.findById(doctorId)
+        .select('userName photo email specialty city birthDate gender raiting')
+        if(!doctorData)
+        {
+            return res.status(400).json({message:'this doctor is not available'})
+        }
+        const DoctorOrderOnline = await Orders.aggregate([  
+           { 
+            $match:{reservationPlace:{ $in:["video call"]},doctor: doctorData._id,isPaid:true}
+           },  
+           {
+            $group:{
+                _id:"$reservationPlace",
+                totalPaid:{$sum:"$totalPaid"},
+                totalOrders: { $sum: 1}
+            }}    
+        ])
+         let totalPaid
+         let totalOrders  
+        const online = DoctorOrderOnline.find((x)=> {return x})
+
+             totalPaid = online.totalPaid
+             totalOrders = online.totalOrders
+         
+        
+        const profit = totalPaid * 10 / 100
+        const totals =
+        {
+            totalPaid:totalPaid,
+            totalOrders:totalOrders,
+            doctorGained:totalPaid - profit,
+            profit:profit
+        }    
+
+        let doctorResult ={
+            doctorData,
+            DoctorOrderOnline,
+            totals
+        }
+        return res.status(200).json(doctorResult)
+    }
+    catch(err)
+    {
+        if(!err.statuscode)
+            {
+                err.statuscode = 500
+            }
+            next(err)
+    }
+}
+

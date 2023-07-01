@@ -12,9 +12,9 @@ routes.put('/account/updatePhoto/:doctorId',gaurd,upload.single('photo'),control
 routes.put('/account/changePassword/:doctorId',gaurd,controller.updatedPassword)
 routes.put('/account/profile/:doctorId',gaurd,updateProfileUser(),controller.updateProfile)
 
-routes.get('/getAllResrvationDay',gaurd,controller.getAllReservation)
+routes.get('/getAllResrvationDay/:id',gaurd,controller.getAllReservation)
 
-routes.get('/getResrvationDay',gaurd,controller.getReservationDay)
+routes.get('/getResrvationDays/:id/time/:time',gaurd,controller.getReservationDay)
 
 routes.get('/getResrvationDay/:id',gaurd,controller.getReservationDayById)
 
