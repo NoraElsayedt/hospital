@@ -4,6 +4,6 @@ const Contactus = require('../controllers/contactus')
 
 routes.post('/contactus',Contactus.addContactus)
 
-routes.get('/allContactus',Contactus.getAllContactus)
+routes.get('/allContactus/con',Contactus.getAllContactus)
 
 module.exports = routes
