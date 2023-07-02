@@ -1,6 +1,6 @@
 const Doctor = require('../model/doctor')
 
-exports.searchquery = async(req,res,next)=>
+exports.searchspecialty = async(req,res,next)=>
 {
     //to limit number of doctor returned
     const currentPage = req.query.page || 1
@@ -12,15 +12,6 @@ exports.searchquery = async(req,res,next)=>
         {
             query.page = currentPage
         }
-       
-        // if(req.query.specialty)
-        // {
-        //     query.specialty = req.query.specialty
-        // }
-        // if(req.query.userName)
-        // {
-        //     query.userName = { $regex:req.query.userName} 
-        // }
         let findDoctor = await Doctor
         .find( {isverfied:true,
             "specialty":req.body.specialty        })
@@ -44,7 +35,7 @@ exports.searchquery = async(req,res,next)=>
         }
 }
 
-exports.filterOnline = async(req,res,next)=>
+exports.searchspecialtyanduserName = async(req,res,next)=>
 {
     //to limit number of doctor returned
     const currentPage = req.query.page || 1
@@ -56,21 +47,22 @@ exports.filterOnline = async(req,res,next)=>
         {
             query.page = currentPage
         }
-        if(req.query.specialty)
-        {
-            query.specialty = req.query.specialty
-        }
-        if(req.query.userName)
-        {
-            query.userName = { $regex:req.query.userName} 
-        }
+       
+        // if(req.query.specialty)
+        // {
+        //     query.specialty = req.query.specialty
+        // }
+        // if(req.query.userName)
+        // {
+        //     query.userName = { $regex:req.query.userName} 
+        // }
         let findDoctor = await Doctor
-        .find(query)
-        .where('online').equals(true)
-        .select('userName photo specialty region city birthDate location phone teleCalender raiting numReviews')
+        .find( {isverfied:true,
+            "specialty":req.body.specialty,
+        "userName":  req.body.userName  })
+        .select('userName photo specialty region city birthDate location phone calender raiting numReviews')
         .skip((currentPage -1 ) * prepage)
         .limit(prepage)
-        .populate('teleCalender')
         if(findDoctor==0)
         {
            return res.json({message:'sorry this doctors not found'})
@@ -87,3 +79,6 @@ exports.filterOnline = async(req,res,next)=>
                 next(err)
         }
 }
+
+
+
