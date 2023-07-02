@@ -13,16 +13,19 @@ exports.searchquery = async(req,res,next)=>
             query.page = currentPage
         }
        
-        if(req.query.specialty)
-        {
-            query.specialty = req.query.specialty
-        }
-        if(req.query.userName)
-        {
-            query.userName = { $regex:req.query.userName} 
-        }
+        // if(req.query.specialty)
+        // {
+        //     query.specialty = req.query.specialty
+        // }
+        // if(req.query.userName)
+        // {
+        //     query.userName = { $regex:req.query.userName} 
+        // }
         let findDoctor = await Doctor
-        .find(query)
+        .find( {isverfied:true,
+            "specialty":req.body.specialty,
+            "userName":req.body.userName
+        })
         .select('userName photo specialty region city birthDate location phone calender raiting numReviews')
         .skip((currentPage -1 ) * prepage)
         .limit(prepage)
