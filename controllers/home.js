@@ -14,7 +14,7 @@ exports.searchspecialty = async(req,res,next)=>
         }
         let findDoctor = await Doctor
         .find( {isverfied:true,
-            "specialty":req.body.specialty        })
+            "specialty":req.params.specialty        })
         .select('userName photo specialty region city birthDate location phone calender raiting numReviews')
         .skip((currentPage -1 ) * prepage)
         .limit(prepage)
@@ -58,8 +58,8 @@ exports.searchspecialtyanduserName = async(req,res,next)=>
         // }
         let findDoctor = await Doctor
         .find( {isverfied:true,
-            "specialty":req.body.specialty,
-        "userName":  req.body.userName  })
+            "specialty":req.params.specialty,
+        "userName":  req.params.userName  })
         .select('userName photo specialty region city birthDate location phone calender raiting numReviews')
         .skip((currentPage -1 ) * prepage)
         .limit(prepage)
