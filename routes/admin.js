@@ -32,5 +32,7 @@ router.delete('/deleteDoctor/:doctorId',gaurd,adminController.deleteProfile)
 
 router.get('/accounts/:doctorId',adminController.getAccounts)
 
+router.get('/accepted-doctors-new',adminController.getAcceptedDoctorsNew )//All Doctors (Home)
+
 
 module.exports = router

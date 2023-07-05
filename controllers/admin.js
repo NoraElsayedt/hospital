@@ -286,3 +286,23 @@ exports.getAccounts = async(req,res,next)=>
     }
 }
 
+
+
+exports.getAcceptedDoctorsNew = async(req,res,next)=>
+{
+    try
+    {
+        const accepted = await Doctor.find({isverfied:true})
+        
+        res.status(200).json({message:'Doctors are accepts',data:accepted})
+    }
+    catch(error) //technical error handling
+        {
+            if(!error.statuscode)
+            {
+                error.statuscode = 500
+            }
+            next(error)
+        }    
+}
+

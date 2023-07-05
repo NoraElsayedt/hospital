@@ -88,7 +88,7 @@ const home = require('./routes/home');
 const reservations = require('./routes/reservations')
 const contactus = require('./routes/contactus')
 const Notes = require('./routes/notes')
-
+const Medicines = require('./routes/medicine')
 
 app.use('/auth',auth);
 app.use('/user',users)
@@ -100,6 +100,7 @@ app.use('/home',home)
 app.use(reservations)
 app.use(contactus)
 app.use(Notes)
+app.use(Medicines)
 
 app.use(express.static(path.join(__dirname,'uploads'))) // to serve images
 
