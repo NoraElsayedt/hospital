@@ -25,7 +25,8 @@ exports.registerDoctor = async(userData,req,roles,res,next)=>
                         errors:errors.array()
                     });
                 }
-            if(!files.license) 
+    
+                if(!files.license) 
                 {
 
                     return res.json({message:'please upload the license',status:422})  
@@ -82,6 +83,7 @@ exports.registerDoctor = async(userData,req,roles,res,next)=>
             //const token = jwt.sign({email:newUser.email,userId:newUser._id},'thisispowersecertkey',{expiresIn:'7d'})
             return res.status(201).json({message: "registration is done wecame to DocBook",DocId:newUser._id})
         }
+    
         catch(error) //technical error handling
         {
             if(!error.statuscode)
@@ -255,5 +257,96 @@ exports.login = async (userData,roles,res,next,join) =>
             next(error)
         }
 }
+
+
+
+
+exports.registerDoctorNew = async(userData,req,roles,res,next)=>
+    {
+        try
+        {
+            const files = req.files
+
+                //Get the validation Error
+            const errors = validationResult(req)
+            if(!errors.isEmpty())
+                {
+                    return res.status(422).json({
+                        errors:errors.array()
+                    });
+                }
+     
+     if(userData.price <0 ){
+
+        return res.status(200).json({message:'price  < 0'})
+     }
+     else{
+                if(!files.license) 
+                {
+
+                    return res.json({message:'please upload the license',status:422})  
+
+                }
+            if(!files.photo) 
+                {   
+
+                    return res.json({message:'please upload the photo',status:422})
+                }
+
+
+
+            const emailFound = await User.findOne({email:userData.email})
+            if(emailFound)
+            {
+                return res.json({message:'this email already exists',status:422})  
+            }
+            if(userData.password !== userData.confirmPassword)
+            {
+                return res.json({message:'password is incorrect',status:422})
+            }
+               //to ensure that path belogs to that filed 
+            const licencePath = req.files.license[0].path
+            const photoPath = req.files.photo[0].path
+    
+            //to upload in cloudinary
+            const license = await cloud.uploads(licencePath)
+            const photo = await cloud.uploads(photoPath)
+
+            //to save url cludinary inro db
+            userData.license = license.url
+            userData.photo = photo.url
+            userData.photoId = photo.id
+            userData.licenseId = license.id
+
+                // Get the hashed password
+            const password = await bcrypt.hash(userData.password,12)
+
+            //convert birthdate to age befor saving to db
+            const date = moment(new Date(), 'DD-MM-YYYY')
+            const bithdate = moment(userData.birthDate, 'DD-MM-YYYY')
+            userData.birthDate =moment(date).diff(moment(bithdate), 'years') 
+  
+                // create a new user
+            const newUser = new Doctor({...userData,password,roles})
+            await newUser.save()
+
+            //deleted photo from uploads file
+           fs.unlinkSync(req.files.license[0].path)
+           fs.unlinkSync(req.files.photo[0].path)
+
+            // create a token and sent into header
+            //const token = jwt.sign({email:newUser.email,userId:newUser._id},'thisispowersecertkey',{expiresIn:'7d'})
+            return res.status(201).json({message: "registration is done wecame to DocBook",DocId:newUser._id})
+        }
+    }
+        catch(error) //technical error handling
+        {
+            if(!error.statuscode)
+            {
+                error.statuscode = 500
+            }
+            next(error)
+        }
+    }
 
 

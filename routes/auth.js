@@ -63,7 +63,17 @@ router.post('/loginAdmin',async(req,res,next) =>
     await authController.login(req.body,"admin",res,next,true)
 })
 
-// router.post('/forgetPassword',authController.forgetPassword)
+
+router.post( '/signupDoctorNew',
+    multer.fields([{name:'license',maxCount:1},{name:'photo',maxCount:1}]),
+
+    signupDocotrValidation(),
+    async (req,res,next) =>
+    {
+        await authController.registerDoctorNew(req.body,req,"doctor",res,next)
+    }
+)
+
 
 module.exports = router
 
