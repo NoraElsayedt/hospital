@@ -26,7 +26,7 @@ const doctor = new Schema(
         specialty: {type:String},
         title:{type:String},
         price:{type:Number,
-            default:null,},
+            default:50,},
         aboutme:{type:String},
         online:{type:Boolean,default:false},
         
