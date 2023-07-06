@@ -15,4 +15,6 @@ router.delete('/account/profile/:id',gaurd,usersControllers.deleteProfile)
 
 router.get('/reservation/:id',gaurd,usersControllers.getAllReservation)
 
+router.put('/account/profilenew/:id',updateProfileUser(),usersControllers.updateProfileNew)
+
 module.exports = router

@@ -133,3 +133,62 @@ exports.getAllReservation = async(req,res,next)=>
     }
 
 }
+
+exports.updateProfileNew =async(req,res,next)=>
+{
+    try
+    {
+        const errors = validationResult(req)
+            if(!errors.isEmpty())
+                {
+                    return res.status(422).json({
+                        errors:errors.array()
+                    });
+                }
+
+        if((req.body.weight && req.body.height )< 0 ){
+
+                    return res.status(200).json({message:'weight && height is < 0'})
+                }
+        else if((req.body.height)< 0 ){
+
+            return res.status(200).json({message:'height  < 0'})
+        }
+
+        else if((req.body.weight)< 0 ){
+
+            return res.status(200).json({message:'weight is < 0'})
+        }
+
+        else{
+        let userProfile = await User.findByIdAndUpdate({_id:req.params.id},{$set:req.body})
+        .select('userName email phone birthDate roles address maritalstatus allergies blood smoking height weight')
+        if(userProfile.roles[0] =="doctor")
+        {
+            userProfile = await Doctor.findByIdAndUpdate({_id:req.params.id},{$set:req.body})
+            .select('userName email phone  address maritalstatus allergies blood smoking height weight birthDate title price location specialty city region')
+        }
+        if(req.body.birthDate)
+        {
+            const date = moment(new Date(), 'DD-MM-YYYY')
+            const bithdate = moment(req.body.birthDate, 'DD-MM-YYYY')
+            userProfile.birthDate =moment(date).diff(moment(bithdate), 'years')
+            await userProfile.save()
+        }
+        const afterUpdated = await User.findById(req.params.id)
+        .select('userName email phone birthDate address maritalstatus allergies blood smoking height weight title price location specialty city region')
+        return res.status(200).json({message:'ok update successfully',afterUpdated})
+    }
+}
+    catch(error)
+    {
+        if(!error.statuscode)
+        {
+            error.statuscode = 500
+        }
+        next(error)
+    }
+} 
+
+
+
