@@ -34,5 +34,6 @@ router.get('/accounts/:doctorId',adminController.getAccounts)
 
 router.get('/accepted-doctors-new',adminController.getAcceptedDoctorsNew )//All Doctors (Home)
 
+router.get('/AccountsNew',adminController.getAccountsNew)
 
 module.exports = router
